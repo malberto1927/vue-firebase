@@ -1,12 +1,12 @@
 <template>
-  <div class="hello">
+  <div class="column is-half">
     <h1>Inicia sesión</h1>
     <form class="" @submit.prevent="onLogin">
       <div>
-        <input type="text" v-model="user.email" placeholder="Email">
+        <input type="text" v-model="loginForm.email" placeholder="Email" required>
       </div>
       <div>
-        <input type="password" v-model="user.password" placeholder="Contraseña">
+        <input type="password" v-model="loginForm.password" placeholder="Contraseña" required>
       </div>
       <br>
       <button type="submit">Iniciar Sesión</button>
@@ -15,19 +15,26 @@
 </template>
 
 <script>
+import firebase from '../../services/firebase'
+
 export default {
   name: 'LoginApp',
   data () {
     return {
-      user: {
+      loginForm: {
         email: '',
         password: ''
-      }
+      },
+      user: {}
     }
   },
   methods: {
     onLogin () {
-      console.log(this.user)
+      firebase.auth.signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password).then(user => {
+        console.log(user)
+      }).catch(error => {
+        console.error(error)
+      })
     }
   }
 }
